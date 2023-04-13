@@ -27,12 +27,10 @@ exports.createAgency = async (req, res) => {
 
 exports.updateAgency = async (req, res) => {
   const { name, address1, address2, state, city, phone } = req.body;
+  const {id} = req.query;
   try {
-    const agency = await Agency.findOne({
-      where: {
-        Name: name,
-      },
-    });
+    const agency = await Agency.findByPk(id);
+    agency.Name = name
     agency.Address1 = address1;
     agency.Address2 = address2 !== "" ? address2 : null;
     agency.State = state;
@@ -56,7 +54,7 @@ exports.getAgency = async (req, res) => {
   try{
     const agency = await Agency.findByPk(id);
     const clients = await agency.getClients({
-      attributes: [['Name', 'AgencyName'], 'TotalBill'], // include two columns with changed column name
+      attributes: [['Name', 'ClientName'], 'TotalBill'], // include two columns with changed column name
       order: [['TotalBill', 'DESC']] // sort on totalBill in descending order
     });
     

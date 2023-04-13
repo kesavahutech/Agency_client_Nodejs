@@ -4,9 +4,10 @@ const Client = require("../Model/Client");
 
 //  to add client to the mentioned agency
 exports.addClient = async (req, res) => {
-  const { id, name, email, phone, bill } = req.body;
+  const { name, email, phone, bill } = req.body;
+  const { agencyid } = req.query;
   try {
-    const agency = await Agency.findByPk(id);
+    const agency = await Agency.findByPk(agencyid);
     await agency.createClient({
       Name: name,
       Email: email,
@@ -27,12 +28,10 @@ exports.addClient = async (req, res) => {
 // to update client
 exports.updateClient = async (req, res) => {
   const { name, email, phone, bill } = req.body;
+  const {clientid} = req.query;
   try {
-    const client = await Client.findOne({
-      where: {
-        Email : email
-      },
-    });
+    const client = await Client.findByPk(clientid);
+    client.email = email;
     client.Name = name;
     client.Phone = phone;
     client.TotalBill = bill;
